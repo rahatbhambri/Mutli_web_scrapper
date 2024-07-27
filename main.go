@@ -3,43 +3,29 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
+	"sync"
 	"webscrapper/utils"
 )
 
 func main() {
+	var wg sync.WaitGroup
 	filepath := "static/web_data.txt"
 	_, err := os.Create(filepath)
 	if err != nil {
 		fmt.Println("Error creating or replacing file:", err)
 		return
 	}
-	startTime := time.Now()
-	ch := make(chan string, 3)
+	ch := make(chan string, 4)
+	urls := []string{"https://en.wikipedia.org/wiki/Tiger", "http://www.facebook.com", "http://www.cnet.com", "https://en.wikipedia.org/wiki/Taj_Mahal"}
 	// spawn gouroutines to start scrapping
-	go utils.StartScrapping("https://en.wikipedia.org/wiki/Tiger", ch)
-	go utils.StartScrapping("http://www.facebook.com", ch)
-	go utils.StartScrapping("http://www.cnet.com", ch)
-	go utils.StartScrapping("https://en.wikipedia.org/wiki/Taj_Mahal", ch)
-	var local_data []string
-	for {
-		// Check elapsed time since start
-		elapsed := time.Since(startTime)
-		// Exit loop if 10 seconds have passed
-		if elapsed >= 10*time.Second {
-			break
-		}
-		// Example: Simulate receiving values from a channel (replace with actual logic)
-		select {
-		case val := <-ch:
-			if val != "" {
-				local_data = append(local_data, val)
-			}
-		default:
-			// No value received, continue loop or perform other operations
-		}
+	for _, url := range urls {
+		go utils.StartScrapping(url, ch, &wg)
+		wg.Add(1)
 	}
-	for _, data := range local_data {
+	wg.Wait()
+	close(ch)
+
+	for data := range ch {
 		err := utils.AppendToFile(filepath, data)
 		if err != nil {
 			fmt.Println("error writing to file")
@@ -47,4 +33,5 @@ func main() {
 			fmt.Println("Successfully written to file")
 		}
 	}
+	fmt.Println("All done")
 }

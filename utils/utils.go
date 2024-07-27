@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sync"
 
 	goquery "github.com/PuerkitoBio/goquery"
 )
@@ -31,7 +32,8 @@ func AppendToFile(filepath string, data string) error {
 	return nil
 }
 
-func StartScrapping(url string, ch chan string) {
+func StartScrapping(url string, ch chan string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	// Getting data from webpage
 	resp, err := http.Get(url)
 	if err != nil {
