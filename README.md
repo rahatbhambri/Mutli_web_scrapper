@@ -9,6 +9,7 @@ go run main.go
 ```
 
 Results are stored text file called web_data.txt
+![image](https://github.com/user-attachments/assets/0dab627d-5ff9-4a01-b25f-9c3f0a61db31)
 
 
 
