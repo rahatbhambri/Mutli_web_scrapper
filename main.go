@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	// fmt.Println("Hello")
 	filepath := "web_data.txt"
 	_, err := os.Create(filepath)
 	if err != nil {
@@ -16,22 +15,19 @@ func main() {
 	}
 	startTime := time.Now()
 	ch := make(chan string, 3)
-
+	// spawn gouroutines to start scrapping
 	go StartScrapping("https://en.wikipedia.org/wiki/Tiger", ch)
 	go StartScrapping("http://www.facebook.com", ch)
 	go StartScrapping("http://www.cnet.com", ch)
 	go StartScrapping("https://en.wikipedia.org/wiki/Taj_Mahal", ch)
-
 	var local_data []string
 	for {
 		// Check elapsed time since start
 		elapsed := time.Since(startTime)
-
 		// Exit loop if 10 seconds have passed
 		if elapsed >= 10*time.Second {
 			break
 		}
-
 		// Example: Simulate receiving values from a channel (replace with actual logic)
 		select {
 		case val := <-ch:

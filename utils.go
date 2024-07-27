@@ -17,20 +17,17 @@ func AppendToFile(filepath string, data string) error {
 		return err
 	}
 	defer file.Close()
-
 	// Create a buffered writer from the file
 	writer := bufio.NewWriter(file)
 	_, err = writer.WriteString(data)
 	if err != nil {
 		return err
 	}
-
 	// Ensure all buffered data is written to the file
 	err = writer.Flush()
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -41,10 +38,9 @@ func StartScrapping(url string, ch chan string) {
 		fmt.Println(err)
 		return
 	}
-
 	S := ""
 	defer resp.Body.Close()
-
+	// return if webpage is unavailable
 	if resp.StatusCode != 200 {
 		fmt.Println("error fetching from website")
 		return
