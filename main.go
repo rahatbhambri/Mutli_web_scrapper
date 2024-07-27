@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"webscrapper/utils"
 )
 
 func main() {
-	filepath := "web_data.txt"
+	filepath := "static/web_data.txt"
 	_, err := os.Create(filepath)
 	if err != nil {
 		fmt.Println("Error creating or replacing file:", err)
@@ -16,10 +17,10 @@ func main() {
 	startTime := time.Now()
 	ch := make(chan string, 3)
 	// spawn gouroutines to start scrapping
-	go StartScrapping("https://en.wikipedia.org/wiki/Tiger", ch)
-	go StartScrapping("http://www.facebook.com", ch)
-	go StartScrapping("http://www.cnet.com", ch)
-	go StartScrapping("https://en.wikipedia.org/wiki/Taj_Mahal", ch)
+	go utils.StartScrapping("https://en.wikipedia.org/wiki/Tiger", ch)
+	go utils.StartScrapping("http://www.facebook.com", ch)
+	go utils.StartScrapping("http://www.cnet.com", ch)
+	go utils.StartScrapping("https://en.wikipedia.org/wiki/Taj_Mahal", ch)
 	var local_data []string
 	for {
 		// Check elapsed time since start
@@ -39,7 +40,7 @@ func main() {
 		}
 	}
 	for _, data := range local_data {
-		err := AppendToFile(filepath, data)
+		err := utils.AppendToFile(filepath, data)
 		if err != nil {
 			fmt.Println("error writing to file")
 		} else {
