@@ -2,12 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"sync"
+	"webscrapper/router"
 	"webscrapper/utils"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
-func main() {
+func updateFile() {
 	var wg sync.WaitGroup
 	filepath := "static/web_data.txt"
 	_, err := os.Create(filepath)
@@ -34,4 +40,20 @@ func main() {
 		}
 	}
 	fmt.Println("All done")
+}
+
+func main() {
+	r := chi.NewRouter()
+
+	// Use some middleware (like request logging)
+	r.Use(middleware.Logger)
+
+	// Define the /getData route
+	r.Get("/getData", router.GetDataHandler)
+
+	// Start the server on port 8080
+	fmt.Println("Server starting at http://localhost:8080...")
+	if err := http.ListenAndServe(":8080", r); err != nil {
+		log.Fatal("Server failed to start:", err)
+	}
 }
