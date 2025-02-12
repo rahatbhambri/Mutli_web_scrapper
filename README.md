@@ -1,4 +1,4 @@
-**Application use case:** Scrap a bunch of urls and store the data in a text file
+**Application use case:** Concurrently scrap multiple urls for text and store the data in a file
 
 **Extension of the use case:** Use the text data stored to train AI and build a Question answering system on top of it. 
 
