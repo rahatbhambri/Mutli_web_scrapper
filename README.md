@@ -36,9 +36,6 @@ cd Mutli_web_scrapper
 ## Contributing
 Contributions are welcome! Feel free to submit issues and pull requests.
 
-## License
-(Include license details if applicable.)
-
 
 
 
